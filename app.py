@@ -55,6 +55,12 @@ def sms_reply():
                 '''
                 For more information, please feel free to call our landline number on *+263772145166-9* or alternatively visit our website on *www.timb.co.zw* to stay updated on current affairs in the Tobacco Industry.
                 ''')
+        else:
+            resp.message(\
+                '''
+                Sorry, I did not get that. Please come again!
+                '''
+                )
             
     return str(resp)
 
