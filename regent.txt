@@ -11,6 +11,12 @@ def home():
 @app.route("/sms", methods = ['POST'])
 @check_intention
 def sms_reply():
+    # create a regular expression
+    grower_num_regex1 = re.compile(r'\w{1}\d{6}\w{1}')
+    grower_num_regex2= re.compile(r'\w{1}\d{6}')
+    id_num_regex1 = re.compile(r'\d{2}-\d{6}\w{1}\d{2}')
+    id_num_regex2 = re.compile(r'\d{2}-\d{7}\w{1}\d{2}')
+    
     # capture user input
     resp = MessagingResponse()
     phone = request.form.get('From')
@@ -21,13 +27,16 @@ def sms_reply():
     if current_message in greeting_messages:
         resp.message(\
 '''
-Hi, I'm *Pat*, a digital career guidance chatbot. Please choose one of the following to interact with me:\n
-1. Register \n
-2. Login \n
-3. Get help choosing a career \n
-4. About me\n\n
+Hi, my name is Murimi, a *Tobacco Industry & Marketing Board*
+digital customer care assistant and I am here to serve you.
+To begin interacting with me, please select an option from the following:\n
+1. Login as a Tobacco Grower \n
+2. How can I register a new grower number? \n
+3. What are the requirements to register as a Tobacco transporter? \n
+4. Who can I speak to for more information? \n
+5. About me\n\n
 You can type *#done* at any time to close the conversation.\n\n
-*Pat*
+*Tobacco Industry and Marketing Board - Icon of excellence*
 '''
             )
     
@@ -42,25 +51,28 @@ You can type *#done* at any time to close the conversation.\n\n
         if current_message.startswith('1'):
             resp.message(\
                 '''
-                Please enter a valid email and phone number to register.
+                Please enter your registered Grower Number to continue.
                 '''
                 )
+            if current_message.startswith('v') or current_message.startswith('V'):
+                validated_grower = grower_num_regex1.search(current_message) or grower_num_regex2.search(current_message)
+                resp.message(validated_grower)
         elif current_message.startswith('2'):
             resp.message(\
                 '''
-                Enter your registered email and phone number to log in.
+                In order to register as a Grower, you are required to bring an *offer letter and Agritex letter*, but if you are not the owner of the farm, an *affidavit and ID of the owner* are required. The registration fee is RTGS$100 from November to December, RTGS$200 in January before opening of floors and RTGS$500 when floors are open. When in need of a grower number but in the rural areas, a *letter from the Councillor, Agritex and a copy of your ID* are required.
                 '''
                 )
         elif current_message.startswith('3'):
             resp.message(\
                 '''
-            To get started, please enter the subject combinations you prefer.
+            Stop Order for a new transporter's permit is RTGS$3750 and for renewal is RTGS$2500. To register as a new individual transporter, you are required to bring copies of your national ID and registration book as well as an agreement of sale for the vehicle to be used. When registering as a company, copies of the following documents are required: *CR14, Certificate of Incorporation and Tax Clearance*.
             '''
             )
         elif current_message.startswith('4'):
             resp.message(\
                 '''
-                I am Pat, a digital career guidance chatbot built under ScarLab AI by AxionTech.
+                For more information, please feel free to call our landline number on *+263772145166-9* or alternatively visit our website on *www.timb.co.zw* to stay updated on current affairs in the Tobacco Industry.
                 ''')
         else:
             resp.message(\
